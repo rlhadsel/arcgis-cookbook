@@ -83,7 +83,7 @@
          the SSLImplementation selected. JSSE style configuration is used below.
     -->
     <Connector port="8443" protocol="org.apache.coyote.http11.Http11Nio2Protocol"
-               maxThreads="200" SSLEnabled="true">
+               maxThreads="200" SSLEnabled="true" scheme="https" secure="true">
         <SSLHostConfig protocols="<%= node['tomcat']['ssl_enabled_protocols'] %>">
             <Certificate certificateKeystoreFile="<%= node['tomcat']['keystore_file'] %>"
                          certificateKeystorePassword="<%= node['tomcat']['keystore_password'] %>"

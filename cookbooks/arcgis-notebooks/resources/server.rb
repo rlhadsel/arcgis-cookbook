@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-notebooks
 # Resource:: server
 #
-# Copyright 2019-2024 Esri
+# Copyright 2019-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -254,6 +254,12 @@ action :configure_autostart do
       agsnotebook_path = '/etc/systemd/system/agsnotebook.service'
       agsnotebook_service_file = 'agsnotebook.service.erb'
       agsnotebook_template_variables = ({ :agsnotebookhome => agsnotebookhome, :agsuser => agsuser })
+    end
+
+    execute 'Stop server with stopnotebookserver.sh' do
+      cwd agsnotebookhome
+      command ::File.join(agsnotebookhome, 'stopnotebookserver.sh')
+      user agsuser
     end
 
     template agsnotebook_path do

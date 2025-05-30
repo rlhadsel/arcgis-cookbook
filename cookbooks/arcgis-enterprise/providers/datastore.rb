@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-enterprise
 # Provider:: datastore
 #
-# Copyright 2015-2024 Esri
+# Copyright 2015-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -260,6 +260,12 @@ action :configure_autostart do
       end
     end
 
+    execute 'Stop data store with stopdatastore.sh' do
+      cwd datastorehome
+      command ::File.join(datastorehome, 'stopdatastore.sh')
+      user agsuser
+    end
+
     template arcgisdatastore_path do
       source service_file
       cookbook 'arcgis-enterprise'
@@ -469,6 +475,21 @@ action :remove_machine do
   @new_resource.types.split(',').each do |store|
     datastore_tools.remove_machine(store, hostidentifier, force)
   end
+
+  new_resource.updated_by_last_action(true)
+end
+
+action :relational_db_properties do
+  datastore_tools = ArcGIS::DataStoreTools.new(node['arcgis']['version'],
+                                               node['platform'],
+                                               @new_resource.install_dir,
+                                               node['arcgis']['data_store']['install_subdir'],
+                                               @new_resource.run_as_user)
+
+  datastore_tools.relational_db_properties(@new_resource.disk_threshold_readonly,
+                                           @new_resource.max_connections,
+                                           @new_resource.pitr,
+                                           @new_resource.enablessl)
 
   new_resource.updated_by_last_action(true)
 end

@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-insights
 # Recipe:: uninstall
 #
-# Copyright 2021 Esri
+# Copyright 2021-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,17 +33,4 @@ arcgis_insights_insights 'Uninstall Insights for ArcGIS' do
                                                 :ArcGISServer_Insights) }
   end
   action :uninstall
-end
-
-arcgis_enterprise_portal 'Start Portal for ArcGIS after ArcGIS Insights uninstall' do
-  tomcat_java_opts node['arcgis']['portal']['tomcat_java_opts']
-  if node['platform'] == 'windows'
-    only_if { Utils.product_installed?(node['arcgis']['portal']['product_code']) }
-  else
-    only_if { EsriProperties.product_installed?(node['arcgis']['run_as_user'],
-                                               node['hostname'],
-                                               node['arcgis']['version'],
-                                               :ArcGISPortal) }
-  end
-  action :start
 end

@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-enterprise
 # Attributes:: server
 #
-# Copyright 2023-2024 Esri
+# Copyright 2023-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -63,6 +63,7 @@ default['arcgis']['server'].tap do |server|
   server['cert_alias'] = server_domain_name
   server['root_cert'] = ''
   server['root_cert_alias'] = ''
+  server['import_certificate_chain'] = true
   server['system_properties'] = {}
   server['log_level'] = 'WARNING'
   server['max_log_file_age'] = 90
@@ -145,6 +146,15 @@ default['arcgis']['server'].tap do |server|
                                                   'ServerConfigurationUtility.exe').gsub('/', '\\')    
 
     case node['arcgis']['version']
+    when '11.5'
+      server['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
+                                            'ArcGIS_Server_Windows_115_195344.exe').gsub('/', '\\')
+      server['product_code'] = '{BBFCF183-6CB3-409F-A855-21D48C5F079B}'
+      default['arcgis']['python']['runtime_environment'] = File.join(
+        server_install_dir, 
+        'framework\\runtime\\ArcGIS\\bin\\Python\\envs\\arcgispro-py3').gsub('/', '\\')
+      server['patch_registry'] ='SOFTWARE\\ESRI\\Server11.5\\Updates'        
+      server['unpack_options'] = '/x'
     when '11.4'
       server['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
                                             'ArcGIS_Server_Windows_114_192938.exe').gsub('/', '\\')
@@ -254,6 +264,9 @@ default['arcgis']['server'].tap do |server|
     server['lp-setup'] = node['arcgis']['server']['setup']
 
     case node['arcgis']['version']
+    when '11.5'
+      server['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
+                                            'ArcGIS_Server_Linux_115_195440.tar.gz')
     when '11.4'
       server['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
                                             'ArcGIS_Server_Linux_114_192977.tar.gz')

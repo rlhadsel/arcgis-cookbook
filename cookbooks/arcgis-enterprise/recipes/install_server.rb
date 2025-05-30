@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-enterprise
 # Recipe:: install_server
 #
-# Copyright 2018-2024 Esri
+# Copyright 2018-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -64,6 +64,10 @@ arcgis_enterprise_server 'Configure arcgisserver service' do
   install_dir node['arcgis']['server']['install_dir']
   only_if { node['arcgis']['server']['configure_autostart'] }
   action :configure_autostart
+end
+
+arcgis_enterprise_server 'Start ArcGIS Server' do
+  action :start
 end
 
 # AWS specific actions to disable EC2StartupObserver Node Agent plugin.

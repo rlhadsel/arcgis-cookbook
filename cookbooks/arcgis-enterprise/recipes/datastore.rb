@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-enterprise
 # Recipe:: datastore
 #
-# Copyright 2018-2024 Esri
+# Copyright 2018-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,10 +18,6 @@
 #
 
 include_recipe 'arcgis-enterprise::install_datastore'
-
-arcgis_enterprise_datastore 'Start ArcGIS Data Store' do
-  action :start
-end
 
 arcgis_enterprise_datastore 'Configure ArcGIS Data Store' do
   install_dir node['arcgis']['data_store']['install_dir']
@@ -65,6 +61,18 @@ node['arcgis']['data_store']['types'].split(',').each do |type|
       backup_location store_type_backup_location
       only_if { store_type_backup_type != 'none' }
       action :configure_backup_location
+    end
+
+    arcgis_enterprise_datastore "Update Relational ArcGIS Data Store properties" do
+      install_dir node['arcgis']['data_store']['install_dir']
+      run_as_user node['arcgis']['run_as_user']
+      store 'relational'
+      disk_threshold_readonly node['arcgis']['data_store']['relational']['disk_threshold_readonly']
+      max_connections node['arcgis']['data_store']['relational']['max_connections']
+      pitr node['arcgis']['data_store']['relational']['pitr']
+      enablessl node['arcgis']['data_store']['relational']['enablessl']
+      only_if { store_type == 'relational' }
+      action :relational_db_properties
     end
   end
 end

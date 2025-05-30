@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-enterprise
 # Attributes:: portal
 #
-# Copyright 2022-2024 Esri
+# Copyright 2022-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -57,11 +57,11 @@ default['arcgis']['portal'].tap do |portal|
   else
     portal['admin_password'] = ENV['ARCGIS_PORTAL_ADMIN_PASSWORD']
   end
-  portal['admin_email'] = 'admin@mydomain.com'
+  portal['admin_email'] = nil
   portal['admin_full_name'] = 'Administrator'
   portal['admin_description'] = 'Initial account administrator'
-  portal['security_question'] = 'Your favorite ice cream flavor?'
-  portal['security_question_answer'] = 'bacon'
+  portal['security_question_index'] = 1
+  portal['security_question_answer'] = nil
   portal['keystore_file'] = ''
   if ENV['ARCGIS_PORTAL_KEYSTORE_PASSWORD'].nil?
     portal['keystore_password'] = nil
@@ -71,6 +71,7 @@ default['arcgis']['portal'].tap do |portal|
   portal['cert_alias'] = portal_domain_name
   portal['root_cert'] = ''
   portal['root_cert_alias'] = ''
+  portal['import_certificate_chain'] = true
   portal['allssl'] = true
   portal['tomcat_java_opts'] = ''
   portal['configure_autostart'] = true
@@ -81,6 +82,7 @@ default['arcgis']['portal'].tap do |portal|
 
   portal['security']['user_store_config'] = {'type' => 'BUILTIN', 'properties' => {}}
   portal['security']['role_store_config'] = {'type' => 'BUILTIN', 'properties' => {}}
+  portal['security']['config'] = nil
 
   portal['log_level'] = 'WARNING'
   portal['max_log_file_age'] = 90
@@ -100,6 +102,9 @@ default['arcgis']['portal'].tap do |portal|
 
   portal['webgisdr_properties'] = {}
   portal['webgisdr_timeout'] = 36000 # 10 hours
+
+  portal['email_settings'] = nil
+  portal['user_default_settings'] = nil
   
   case node['platform']
   when 'windows'
@@ -114,6 +119,11 @@ default['arcgis']['portal'].tap do |portal|
     portal['patch_registry'] ='SOFTWARE\\ESRI\\Portal for ArcGIS\\Updates'
 
     case node['arcgis']['version']
+    when '11.5'
+      portal['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
+                                            'Portal_for_ArcGIS_Windows_115_195367.exe').gsub('/', '\\')
+      portal['product_code'] = '{366A0EAF-7974-4EA3-9A43-74D76FB77C47}'
+      portal['unpack_options'] = '/x'
     when '11.4'
       portal['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
                                             'Portal_for_ArcGIS_Windows_114_192940.exe').gsub('/', '\\')
@@ -183,6 +193,9 @@ default['arcgis']['portal'].tap do |portal|
     portal['lp-setup'] = node['arcgis']['server']['setup']
 
     case node['arcgis']['version']
+    when '11.5'
+      portal['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
+                                            'Portal_for_ArcGIS_Linux_115_195451.tar.gz')
     when '11.4'
       portal['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
                                             'Portal_for_ArcGIS_Linux_114_192978.tar.gz')

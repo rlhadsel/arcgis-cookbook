@@ -8,10 +8,12 @@ class Attributes
     '.arcgis.version',
     '.java.version',
     '.java.tarball_path',
+    '.java.tarball_uri',
     '.tomcat.version',
     '.tomcat.tarball_path',
     '.tomcat.install_path',
-    '.arcgis.web_server.webapp_dir'
+    '.arcgis.web_server.webapp_dir',
+    '.arcgis.web_adaptor.dotnet_setup_path'
   ]
 
   # Attributes of complex types that must be copied entirely.

@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-default['tomcat']['version'] = '9.0.83'
+default['tomcat']['version'] = '9.0.97'
 
 default['tomcat']['instance_name'] = 'arcgis'
 default['tomcat']['install_path'] = '/opt/tomcat_' + node['tomcat']['instance_name'] + '_' + node['tomcat']['version']
@@ -46,7 +46,7 @@ default['tomcat']['verify_checksum'] = true
 default['tomcat']['forward_ports'] = true
 default['tomcat']['firewalld']['init_cmd'] = 'firewall-cmd --zone=public --permanent --add-port=0-65535/tcp'
 
-default['java']['version'] = '11.0.21+9'
-default['java']['tarball_uri'] = 'https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.21%2B9/OpenJDK11U-jdk_x64_linux_hotspot_11.0.21_9.tar.gz'
-default['java']['tarball_path'] = "#{Chef::Config['file_cache_path']}/OpenJDK11U-jdk_x64_linux_hotspot_11.0.21_9.tar.gz"
+default['java']['version'] = '17.0.13+11'
+default['java']['tarball_uri'] = 'https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.13%2B11/OpenJDK17U-jdk_x64_linux_hotspot_17.0.13_11.tar.gz'
+default['java']['tarball_path'] = "#{Chef::Config['file_cache_path']}/OpenJDK17U-jdk_x64_linux_hotspot_17.0.13_11.tar.gz"
 default['java']['install_path'] = '/opt'

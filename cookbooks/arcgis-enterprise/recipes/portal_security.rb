@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-enterprise
 # Recipe:: portal_security
 #
-# Copyright 2018 Esri
+# Copyright 2018-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,6 +16,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+arcgis_enterprise_portal "Update Security Configuration" do
+  portal_url node['arcgis']['portal']['url']
+  username node['arcgis']['portal']['admin_username']
+  password node['arcgis']['portal']['admin_password']
+  security_config node['arcgis']['portal']['security']['config']
+  retries 5
+  retry_delay 30
+  action :update_security_config
+end
+
 arcgis_enterprise_portal 'Configure Portal identity store' do
   portal_url node['arcgis']['portal']['url']
   username node['arcgis']['portal']['admin_username']

@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-enterprise
 # Resource:: webadaptor
 #
-# Copyright 2022-2024 Esri
+# Copyright 2022-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ attribute :admin_access, :kind_of => [TrueClass, FalseClass], :default => false
 attribute :mode, :kind_of => String, :default => 'server'
 attribute :setup_options, :kind_of => String, :default => ''
 attribute :reindex_portal_content, :kind_of => [TrueClass, FalseClass], :default => true
+attribute :war_file, :kind_of => String, :default => 'arcgis.war'
 
 def initialize(*args)
   super

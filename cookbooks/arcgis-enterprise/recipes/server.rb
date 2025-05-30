@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-enterprise
 # Recipe:: server
 #
-# Copyright 2023-2024 Esri
+# Copyright 2023-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,6 +16,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+# Fail fast if placeholders are used as values of sensitive attributes
+Utils.check_sensitive_value('arcgis.server.admin_password', node['arcgis']['server']['admin_password'])
 
 arcgis_enterprise_server 'Update ArcGIS Server service logon account' do
   install_dir node['arcgis']['server']['install_dir']
@@ -32,10 +35,6 @@ arcgis_enterprise_server 'Update ArcGIS Server service logon account' do
 end
 
 include_recipe 'arcgis-enterprise::install_server'
-
-arcgis_enterprise_server 'Start ArcGIS Server after upgrade' do
-  action :start
-end
 
 arcgis_enterprise_server 'Authorize ArcGIS Server' do
   authorization_file node['arcgis']['server']['authorization_file']
@@ -185,6 +184,7 @@ arcgis_enterprise_server 'Configure HTTPS' do
   cert_alias node['arcgis']['server']['cert_alias']
   root_cert node['arcgis']['server']['root_cert']
   root_cert_alias node['arcgis']['server']['root_cert_alias']
+  import_certificate_chain node['arcgis']['server']['import_certificate_chain']
   retries 5
   retry_delay 30
   not_if { node['arcgis']['server']['keystore_file'].empty? &&

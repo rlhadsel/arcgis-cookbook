@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-enterprise
 # Recipe:: install_portal_wa
 #
-# Copyright 2022 Esri
+# Copyright 2022-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -58,6 +58,7 @@ end
 
 arcgis_enterprise_webadaptor 'Deploy Web Adaptor for Portal' do
   install_dir node['arcgis']['web_adaptor']['install_dir']
+  war_file node['arcgis']['web_adaptor']['war_file']
   instance_name node['arcgis']['portal']['wa_name']
   not_if { node['platform'] == 'windows' }
   action :deploy

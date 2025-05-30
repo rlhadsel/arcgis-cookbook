@@ -3,6 +3,12 @@ arcgis-license-manager cookbook CHANGELOG
 
 This file is used to list changes made in each version of the arcgis-license-manager cookbook.
 
+5.2.0
+-----
+
+- Added support for ArcGIS License Manager 2025.0
+
+
 5.1.0
 -----
 

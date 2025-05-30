@@ -3,6 +3,10 @@ arcgis-pro cookbook CHANGELOG
 
 This file is used to list changes made in each version of the arcgis-pro cookbook.
 
+5.2.0
+-----
+- Added support for ArcGIS Pro 3.5.
+
 5.1.0
 -----
 - Added support for ArcGIS Pro 3.4.

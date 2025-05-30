@@ -240,6 +240,12 @@ action :configure_autostart do
       agsvideo_template_variables = ({ :agsvideohome => agsvideohome, :agsuser => agsuser })
     end
 
+    execute 'Stop server with stopvideoserver.sh' do
+      cwd agsvideohome
+      command ::File.join(agsvideohome, 'stopvideoserver.sh')
+      user agsuser
+    end
+
     template agsvideo_path do
       source agsvideo_service_file
       cookbook 'arcgis-video'

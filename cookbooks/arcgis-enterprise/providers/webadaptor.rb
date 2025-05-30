@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-enterprise
 # Provider:: webadaptor
 #
-# Copyright 2023 Esri
+# Copyright 2023-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -180,7 +180,7 @@ action :deploy do
   else
     install_subdir = ::File.join(@new_resource.install_dir,
                                  node['arcgis']['web_adaptor']['install_subdir'])
-    src_path = ::File.join(install_subdir, 'java/arcgis.war')
+    src_path = ::File.join(install_subdir, 'java', @new_resource.war_file)
     dst_path = ::File.join(node['arcgis']['web_server']['webapp_dir'],
                            @new_resource.instance_name + '.war')
     begin

@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of the arcgis-workflow-manager cookbook.
 
+## 5.2.0
+
+- Added Support for ArcGIS Workflow Manager Server 11.5.
+
 ## 5.1.0
 
 - Added Support for ArcGIS Workflow Manager Server 11.4.

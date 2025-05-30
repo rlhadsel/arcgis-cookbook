@@ -1,5 +1,5 @@
 #
-# Copyright 2022 Esri
+# Copyright 2022-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -380,4 +380,16 @@ module Utils
     canonical_path1 == canonical_path2
   end
 
+  # Throws an exception if a placeholder is used as value of a sensitive attribute
+  def self.check_sensitive_value(attribute, value)
+    if [
+        "<run_as_password>",
+        "<portal_admin_email>",
+        "<portal_admin_password>",
+        "<security_question_answer>",
+        "<server_admin_password>"
+      ].include?(value)
+      raise "Value '#{value}' is not allowed for attribute '#{attribute}'."
+    end
+  end
 end

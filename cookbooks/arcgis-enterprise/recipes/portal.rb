@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-enterprise
 # Recipe:: portal
 #
-# Copyright 2018-2024 Esri
+# Copyright 2018-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,12 +17,12 @@
 # limitations under the License.
 #
 
-include_recipe 'arcgis-enterprise::install_portal'
+# Fail fast if placeholders are used as values of sensitive attributes
+Utils.check_sensitive_value('arcgis.portal.admin_email', node['arcgis']['portal']['admin_email'])
+Utils.check_sensitive_value('arcgis.portal.admin_password', node['arcgis']['portal']['admin_password'])
+Utils.check_sensitive_value('arcgis.portal.security_question_answer', node['arcgis']['portal']['security_question_answer'])
 
-arcgis_enterprise_portal 'Start Portal for ArcGIS after install' do
-  tomcat_java_opts node['arcgis']['portal']['tomcat_java_opts']
-  action :start
-end
+include_recipe 'arcgis-enterprise::install_portal'
 
 # Set hostname in hostname.properties file.
 template ::File.join(node['arcgis']['portal']['install_dir'],
@@ -67,7 +67,7 @@ arcgis_enterprise_portal 'Create Portal Site' do
   full_name node['arcgis']['portal']['admin_full_name']
   email node['arcgis']['portal']['admin_email']
   description node['arcgis']['portal']['admin_description']
-  security_question node['arcgis']['portal']['security_question']
+  security_question_index node['arcgis']['portal']['security_question_index']
   security_question_answer node['arcgis']['portal']['security_question_answer']
   install_dir node['arcgis']['portal']['install_dir']
   content_store_type node['arcgis']['portal']['content_store_type']
@@ -120,6 +120,7 @@ arcgis_enterprise_portal 'Configure HTTPS' do
   keystore_file node['arcgis']['portal']['keystore_file']
   keystore_password node['arcgis']['portal']['keystore_password']
   cert_alias node['arcgis']['portal']['cert_alias']
+  import_certificate_chain node['arcgis']['portal']['import_certificate_chain']
   not_if { node['arcgis']['portal']['keystore_file'].empty? || 
            node['arcgis']['portal']['cert_alias'].empty? }
   retries 5
@@ -135,4 +136,14 @@ arcgis_enterprise_portal 'Configure All SSL' do
   retries 5
   retry_delay 30
   action :set_allssl
+end
+
+arcgis_enterprise_portal "Update Email Settings" do
+  portal_url node['arcgis']['portal']['url']
+  username node['arcgis']['portal']['admin_username']
+  password node['arcgis']['portal']['admin_password']
+  email_settings node['arcgis']['portal']['email_settings']
+  retries 5
+  retry_delay 30
+  action :update_email_settings
 end

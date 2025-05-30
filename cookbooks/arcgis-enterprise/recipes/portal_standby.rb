@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-enterprise
 # Recipe:: portal_standby
 #
-# Copyright 2023 Esri
+# Copyright 2023-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,11 +18,6 @@
 #
 
 include_recipe 'arcgis-enterprise::install_portal'
-
-arcgis_enterprise_portal 'Start Portal for ArcGIS after install' do
-  tomcat_java_opts node['arcgis']['portal']['tomcat_java_opts']
-  action :start
-end
 
 # Set hostname in hostname.properties file.
 template ::File.join(node['arcgis']['portal']['install_dir'],
@@ -88,6 +83,7 @@ arcgis_enterprise_portal 'Configure HTTPS' do
   cert_alias node['arcgis']['portal']['cert_alias']
   root_cert node['arcgis']['portal']['root_cert']
   root_cert_alias node['arcgis']['portal']['root_cert_alias']
+  import_certificate_chain node['arcgis']['portal']['import_certificate_chain']
   not_if { node['arcgis']['portal']['keystore_file'].empty? }
   retries 5
   retry_delay 30

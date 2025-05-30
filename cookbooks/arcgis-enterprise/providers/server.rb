@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-enterprise
 # Provider:: server
 #
-# Copyright 2015-2024 Esri
+# Copyright 2015-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -459,8 +459,13 @@ action :set_system_properties do
     admin_client.update_services_directory_properties(@new_resource.services_dir_enabled)
     Chef::Log.info 'ArcGIS Server services directory properties were updated.'
   rescue Exception => e
-    Chef::Log.error 'Failed to update ArcGIS Server system properties. ' + e.message
-    raise e
+    if e.message.include?('Failed to clear REST cache on one or more server machines.')
+      # Clearing REST cache may fail when other machines in the site are not accessible.
+      Chef::Log.warn e.message
+    else
+      Chef::Log.error 'Failed to update ArcGIS Server system properties. ' + e.message
+      raise e
+    end
   end
 end
 
@@ -496,7 +501,8 @@ action :configure_https do
         admin_client.import_server_ssl_certificate(machine_name,
                                                    @new_resource.keystore_file,
                                                    @new_resource.keystore_password,
-                                                   @new_resource.cert_alias)
+                                                   @new_resource.cert_alias,
+                                                   @new_resource.import_certificate_chain)
       end
 
       admin_client.set_server_admin_url(machine_name, @new_resource.server_admin_url)
@@ -716,6 +722,12 @@ action :configure_autostart do
           template_variables = template_variables.merge(cloudenvironment)
         end
       end
+    end
+
+    execute 'Stop server with stopserver.sh' do
+      cwd agshome
+      command ::File.join(agshome, 'stopserver.sh')
+      user agsuser
     end
 
     template arcgisserver_path do

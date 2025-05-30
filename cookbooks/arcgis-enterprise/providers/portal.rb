@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-enterprise
 # Provider:: portal
 #
-# Copyright 2015-2024 Esri
+# Copyright 2015-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -122,17 +122,6 @@ action :install do
     #     FileUtils.chown(run_as_user, nil, properties_filename)
     #   end
     # end
-
-    # Stop Portal to start it later using SystemD service
-    cmd = node['arcgis']['portal']['stop_tool']
-
-    if node['arcgis']['run_as_superuser']
-      cmd = Mixlib::ShellOut.new("su #{node['arcgis']['run_as_user']} -c \"#{cmd}\"", {:timeout => 30})
-    else
-      cmd = Mixlib::ShellOut.new(cmd, {:timeout => 30})
-    end
-    cmd.run_command
-    cmd.error!
   end
 
   new_resource.updated_by_last_action(true)
@@ -193,6 +182,12 @@ action :configure_autostart do
           template_variables = template_variables.merge(cloudenvironment)
         end
       end
+    end
+
+    execute 'Stop portal with stopportal.sh' do
+      cwd install_subdir
+      command ::File.join(install_subdir, 'stopportal.sh')
+      user agsuser
     end
 
     template arcgisportal_path do
@@ -337,7 +332,7 @@ action :create_site do
     portal_admin_client.create_site(@new_resource.email,
                                     @new_resource.full_name,
                                     @new_resource.description,
-                                    @new_resource.security_question,
+                                    @new_resource.security_question_index,
                                     @new_resource.security_question_answer,
                                     content_store.to_json,
                                     @new_resource.user_license_type_id,
@@ -487,7 +482,8 @@ action :configure_https do
       portal_admin_client.import_server_ssl_certificate(
         @new_resource.keystore_file,
         @new_resource.keystore_password,
-        @new_resource.cert_alias)
+        @new_resource.cert_alias,
+        @new_resource.import_certificate_chain)
     end
 
     portal_admin_client.set_server_ssl_certificate(@new_resource.cert_alias)
@@ -831,3 +827,52 @@ action :webgisdr_import do
 
   new_resource.updated_by_last_action(true)
 end
+
+action :update_email_settings do
+  portal_admin_client = ArcGIS::PortalAdminClient.new(@new_resource.portal_url,
+                                                      @new_resource.username,
+                                                      @new_resource.password)
+
+  portal_admin_client.wait_until_available
+
+  if portal_admin_client.site_exist? && !@new_resource.email_settings.nil?
+    Chef::Log.info('Updating email settings...')
+
+    portal_admin_client.update_email_settings(@new_resource.email_settings)
+
+    new_resource.updated_by_last_action(true)
+  end
+end
+
+action :update_security_config do
+  portal_admin_client = ArcGIS::PortalAdminClient.new(@new_resource.portal_url,
+                                                      @new_resource.username,
+                                                      @new_resource.password)
+
+  portal_admin_client.wait_until_available
+
+  if portal_admin_client.site_exist? && !@new_resource.security_config.nil?
+    Chef::Log.info('Updating security configuration...')
+
+    portal_admin_client.update_security_config(@new_resource.security_config)
+
+    new_resource.updated_by_last_action(true)
+  end
+end
+
+action :set_user_default_settings do
+  portal_admin_client = ArcGIS::PortalAdminClient.new(@new_resource.portal_url,
+                                                      @new_resource.username,
+                                                      @new_resource.password)
+
+  portal_admin_client.wait_until_available
+
+  if portal_admin_client.site_exist? && !@new_resource.user_default_settings.nil?
+    Chef::Log.info('Updating user default settings...')
+
+    portal_admin_client.set_user_default_settings(@new_resource.user_default_settings)
+
+    new_resource.updated_by_last_action(true)
+  end
+end
+

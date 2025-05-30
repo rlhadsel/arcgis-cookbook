@@ -1,0 +1,28 @@
+{
+    "arcgis": {
+        "version": "11.5",
+        "repository": {
+            "local_archives": "/opt/software/archives",
+            "server": {
+                "s3bucket": "arcgisstore-us-east-1",
+                "region": "us-east-1",
+                "aws_access_key": "",
+                "aws_secret_access_key": ""
+            },
+            "files": {
+                "ArcGIS_Notebook_Docker_Advanced_115_195407.tar.gz": {
+                    "subfolder": "11.5/setups"
+                },
+                "ArcGIS_Notebook_Docker_Standard_115_195406.tar.gz": {
+                    "subfolder": "11.5/setups"
+                },
+                "ArcGIS_Notebook_Server_Linux_115_195484.tar.gz": {
+                    "subfolder": "11.5/setups"
+                }
+            }
+        }
+    },
+    "run_list": [
+        "recipe[arcgis-repository::s3files2]"
+    ]
+}
