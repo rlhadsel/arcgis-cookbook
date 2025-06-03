@@ -1,0 +1,45 @@
+{
+  "arcgis": {
+    "repository": {
+      "local_archives": "C:\\Software\\Archives",
+      "shared": false,
+      "server": {
+        "username": "<repository_username>",
+        "password": "<repository_password>"
+      },
+      "files": {
+        "ArcGIS_Server_Windows_115_195344.exe": {
+          "subfolder": "software/arcgis/11.5"
+        },
+        "ArcGIS_Server_Windows_115_195344.exe.001": {
+          "subfolder": "software/arcgis/11.5"
+        },
+        "Portal_for_ArcGIS_Windows_115_195367.exe": {
+          "subfolder": "software/arcgis/11.5"
+        },
+        "Portal_for_ArcGIS_Windows_115_195367.exe.001": {
+          "subfolder": "software/arcgis/11.5"
+        },
+        "Portal_for_ArcGIS_Web_Styles_Windows_115_195369.exe": {
+          "subfolder": "software/arcgis/11.5"
+        },
+        "ArcGIS_DataStore_Windows_115_195370.exe": {
+          "subfolder": "software/arcgis/11.5"
+        },
+        "ArcGIS_Web_Adaptor_for_Microsoft_IIS_115_195371.exe": {
+          "subfolder": "software/arcgis/11.5"
+        },
+        "dotnet-hosting-8.0.11-win.exe": {
+          "url": "https://download.visualstudio.microsoft.com/download/pr/4956ec5e-8502-4454-8f28-40239428820f/e7181890eed8dfa11cefbf817c4e86b0/dotnet-hosting-8.0.11-win.exe"
+        },
+        "WebDeploy_amd64_en-US.msi": {
+          "url": "https://download.microsoft.com/download/b/d/8/bd882ec4-12e0-481a-9b32-0fae8e3c0b78/webdeploy_amd64_en-US.msi"
+        }
+      }
+    }
+  },
+  "run_list": [
+    "recipe[arcgis-repository::fileserver]",
+    "recipe[arcgis-repository::files]"
+  ]
+}

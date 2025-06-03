@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of the arcgis-video cookbook.
 
+## 5.2.0
+
+- Added support for ArcGIS Video Server 11.5.
+
 ## 5.1.0
 
 - Added support for ArcGIS Video Server 11.4.

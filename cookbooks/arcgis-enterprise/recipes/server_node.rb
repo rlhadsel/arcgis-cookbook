@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-enterprise
 # Recipe:: server_node
 #
-# Copyright 2022-2024 Esri
+# Copyright 2022-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,10 +31,6 @@ arcgis_enterprise_server 'Update ArcGIS Server service logon account' do
 end
 
 include_recipe 'arcgis-enterprise::install_server'
-
-arcgis_enterprise_server 'Start ArcGIS Server after upgrade' do
-  action :start
-end
 
 # Create local server logs directory
 directory node['arcgis']['server']['log_dir'] do
@@ -174,6 +170,7 @@ arcgis_enterprise_server 'Configure HTTPS' do
   cert_alias node['arcgis']['server']['cert_alias']
   root_cert node['arcgis']['server']['root_cert']
   root_cert_alias node['arcgis']['server']['root_cert_alias']
+  import_certificate_chain node['arcgis']['server']['import_certificate_chain']
   use_join_site_tool node['arcgis']['server']['use_join_site_tool']
   retries 10
   retry_delay 30

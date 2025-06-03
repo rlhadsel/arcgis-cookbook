@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-repository
 # Attributes:: default
 #
-# Copyright 2023-2024 Esri
+# Copyright 2023-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -46,6 +46,13 @@ default['arcgis']['repository'].tap do |repository|
   # AWS access keys are required to download files form ArcGIS software repository S3 buckets
   repository['server']['aws_access_key'] = nil
   repository['server']['aws_secret_access_key'] = nil
+
+  # ArcGIS Software repository in Azure storage blob attributes
+  repository['server']['account_name'] = nil
+  repository['server']['account_key'] = nil
+  repository['server']['container_name'] = nil
+  repository['server']['auth_mode'] = 'key'
+  repository['server']['client_id'] = nil
   
   # AWS CLI v2 URLs and installation directory
   repository['aws_cli']['msi_url'] = 'https://awscli.amazonaws.com/AWSCLIV2.msi'
@@ -53,6 +60,11 @@ default['arcgis']['repository'].tap do |repository|
   repository['aws_cli']['bin_dir'] = '/usr/local/bin'
   repository['aws_cli']['install_dir'] = '/usr/local/aws-cli'
 
+  # Azure CLI URLs
+  repository['azure_cli']['msi_url'] = 'https://aka.ms/installazurecliwindows'
+  repository['azure_cli']['wbin_dir'] = 'C:\\Program Files (x86)\\Microsoft SDKs\\Azure\\CLI2\\wbin'
+  repository['azure_cli']['install_dir'] = '/usr/local/azure-cli-env'
+  
   repository['patch_notification']['url'] = 'https://downloads.esri.com/patch_notification/patches.json'
   repository['patch_notification']['versions'] = [node['arcgis']['version']]
   repository['patch_notification']['products'] = []

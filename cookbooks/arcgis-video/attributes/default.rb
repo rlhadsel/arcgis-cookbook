@@ -96,6 +96,10 @@ default['arcgis']['video_server'].tap do |video_server|
     video_server['log_dir'] = 'C:\\arcgisvideoserver\\logs'
 
     case node['arcgis']['version']
+    when '11.5'
+      video_server['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
+                                                    'ArcGIS_Video_Server_Windows_115_195409.exe').gsub('/', '\\')
+      video_server['product_code'] = '{BCA8F7A7-9A65-4E66-A007-83C0D3EF73A6}'
     when '11.4'
       video_server['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
                                                     'ArcGIS_Video_Server_Windows_114_192955.exe').gsub('/', '\\')
@@ -144,6 +148,9 @@ default['arcgis']['video_server'].tap do |video_server|
                                           'usr', 'logs')
 
     case node['arcgis']['version']
+    when '11.5'
+      video_server['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
+                                                  'ArcGIS_Video_Server_Linux_115_195485.tar.gz')
     when '11.4'
       video_server['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
                                                   'ArcGIS_Video_Server_Linux_114_192993.tar.gz')

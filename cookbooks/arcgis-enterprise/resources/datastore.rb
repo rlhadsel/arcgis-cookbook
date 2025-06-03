@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-enterprise
 # Resource:: datastore
 #
-# Copyright 2022-2024 Esri
+# Copyright 2022-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ unified_mode true
 
 actions :system, :unpack, :install, :uninstall, :update_account, :configure_autostart,
         :stop, :start, :configure, :configure_backup_location, :prepare_upgrade,
-        :configure_hostidentifiers_properties, :remove_machine
+        :configure_hostidentifiers_properties, :remove_machine, :relational_db_properties
 
 attribute :setup_archive, :kind_of => String
 attribute :setups_repo, :kind_of => String
@@ -46,6 +46,10 @@ attribute :setup_options, :kind_of => String, :default => ''
 attribute :preferredidentifier, :kind_of => String, :default => 'hostname'
 attribute :hostidentifier, :kind_of => String, :default => ''
 attribute :force_remove_machine, :kind_of => [TrueClass, FalseClass], :default => false
+attribute :disk_threshold_readonly, :kind_of => Integer, :default => 5120
+attribute :max_connections, :kind_of => Integer, :default => 150
+attribute :pitr, :kind_of => String, :default => 'disable'
+attribute :enablessl, :kind_of => [TrueClass, FalseClass], :default => true
 
 def initialize(*args)
   super

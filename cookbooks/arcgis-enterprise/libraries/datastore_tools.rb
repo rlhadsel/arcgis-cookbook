@@ -1,5 +1,5 @@
 #
-# Copyright 2022-2024 Esri
+# Copyright 2022-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ module ArcGIS
     CONFIGURE_DATASTORE_TIMEOUT = 10800
     PREPARE_UPGRADE_TIMEOUT = 600
     REMOVE_MACHINE_TIMEOUT = 600
+    CHANGE_DB_PROPERTIES_TIMEOUT = 600
 
     # Names of properties returned by describedatastore tool
     BACKUP_LOCATION = 'Backup location'
@@ -88,17 +89,13 @@ module ArcGIS
         args = "\'#{server_url}\' \'#{username}\' \'#{password}\' \'#{data_dir}\' --stores #{stores}"
       end      
 
-      # Add --mode parameter for tilecache and object data stores 
-      # if the last known status is not 'Upgrading'.
-      if !mode.nil? && !mode.empty? &&
-         stores.downcase.include?('tilecache') &&
-         last_known_status(data_dir) != 'Upgrading'
-        args += " --mode #{mode}"
-      elsif !mode.nil? && !mode.empty? &&
-         stores.downcase.include?('object') &&
-         mode.downcase == 'cluster' &&
-         last_known_status(data_dir) != 'Upgrading'
-        args += " --mode cluster"
+      # Add --mode parameter for tileCache, object, and graph data stores 
+      # if the clustering mode is specified and the last known status is not 'Upgrading'.
+      if !mode.nil? && !mode.empty? && last_known_status(data_dir) != 'Upgrading'
+        if stores.downcase.include?('tilecache') || stores.downcase.include?('graph') || 
+          (stores.downcase.include?('object') && mode.downcase == 'cluster')
+          args += " --mode #{mode}"
+        end
       end
 
       ## Add --roles parameter for post 11.3 spatiotemporal data store
@@ -260,6 +257,33 @@ module ArcGIS
       Chef::Log.debug('STDERR < ' + cmd.stderr)
 
       cmd.error!
+    end
+
+    def relational_db_properties(disk_threshold_readonly = 5120, max_connections = 150, pitr = 'disable', enablessl = true)
+      ssl = enablessl ? 'true' : 'false'
+      
+      args = "--store relational --disk-threshold-readonly #{disk_threshold_readonly} --max-connections #{max_connections} --pitr #{pitr} --enablessl #{ssl} --prompt no"
+
+      if @platform == 'windows'
+        tool = ::File.join(@tools_dir, 'changedbproperties')
+        cmd = Mixlib::ShellOut.new("\"#{tool}\" #{args}",
+                                   :timeout => CHANGE_DB_PROPERTIES_TIMEOUT,
+                                   :environment => @environment)
+      else
+        tool = ::File.join(@tools_dir, 'changedbproperties.sh')
+        cmd = Mixlib::ShellOut.new("\"#{tool}\" #{args}",
+                                   :timeout => CHANGE_DB_PROPERTIES_TIMEOUT,
+                                   :user => @run_as_user)
+      end
+
+      cmd.run_command
+
+      Chef::Log.debug('STDOUT < ' + cmd.stdout)
+      Chef::Log.debug('STDERR < ' + cmd.stderr)
+
+      if cmd.error?
+        Chef::Log.warn(cmd.stderr)
+      end
     end
 
     private

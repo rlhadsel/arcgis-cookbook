@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-enterprise
 # Recipe:: install_portal
 #
-# Copyright 2018-2024 Esri
+# Copyright 2018-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -75,4 +75,9 @@ arcgis_enterprise_portal 'Configure arcgisportal service' do
   install_dir node['arcgis']['portal']['install_dir']
   only_if { node['arcgis']['portal']['configure_autostart'] }
   action :configure_autostart
+end
+
+arcgis_enterprise_portal 'Start Portal for ArcGIS after install' do
+  tomcat_java_opts node['arcgis']['portal']['tomcat_java_opts']
+  action :start
 end

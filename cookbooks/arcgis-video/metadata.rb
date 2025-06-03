@@ -4,11 +4,11 @@ maintainer_email 'contracts@esri.com'
 license 'Apache-2.0'
 description 'Installs/Configures ArcGIS Video Server'
 long_description 'Installs/Configures ArcGIS Video Server'
-version '5.1.0'
+version '5.2.0'
 chef_version '>= 15.3' if defined? chef_version
 
-depends          'arcgis-enterprise', '~> 5.1'
-depends          'arcgis-repository', '~> 5.1'
+depends          'arcgis-enterprise', '~> 5.2'
+depends          'arcgis-repository', '~> 5.2'
 
 supports         'ubuntu'
 supports         'redhat'
@@ -23,6 +23,7 @@ recipe 'arcgis-video::install_patches', 'Installs patches for ArcGIS Video Serve
 recipe 'arcgis-video::install_server', 'Installs ArcGIS Video Server'
 recipe 'arcgis-video::install_server_wa', 'Installs ArcGIS Web Adaptor for ArcGIS Video Server'
 recipe 'arcgis-video::server', 'Installs and configures ArcGIS Video Server'
+recipe 'arcgis-video::server_node', 'Joins additional machines to ArcGIS Video Server site'
 recipe 'arcgis-video::server_wa', 'Installs and configures ArcGIS Web Adaptor for ArcGIS Video Server'
 recipe 'arcgis-video::uninstall_server', 'Uninstalls ArcGIS Video Server'
 recipe 'arcgis-video::uninstall_server_wa', 'Uninstalls ArcGIS Web Adaptor for ArcGIS Video Server'

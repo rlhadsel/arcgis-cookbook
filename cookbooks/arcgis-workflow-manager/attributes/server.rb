@@ -42,6 +42,11 @@ default['arcgis']['workflow_manager_server'].tap do |server|
                                   'ArcGISWorkflowManagerServer', 'Setup.exe')
 
     case node['arcgis']['version']
+    when '11.5'
+      server['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
+                                            'ArcGIS_Workflow_Manager_Server_115_195410.exe').gsub('/', '\\')
+      server['product_code'] = '{A5C18498-DEF3-44DD-8DE6-8E6C1653CC66}'
+      server['patch_registry'] ='SOFTWARE\\ESRI\\workflowmanager\\Server\\11.5\\Updates'
     when '11.4'
       server['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
                                             'ArcGIS_Workflow_Manager_Server_114_192956.exe').gsub('/', '\\')
@@ -84,6 +89,9 @@ default['arcgis']['workflow_manager_server'].tap do |server|
                                   'ArcGISWorkflowManagerServer', 'Setup.sh')
 
     case node['arcgis']['version']
+    when '11.5'
+      server['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
+                                            'ArcGIS_Workflow_Manager_Server_115_195486.tar.gz')
     when '11.4'
       server['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
                                             'ArcGIS_Workflow_Manager_Server_114_192994.tar.gz')

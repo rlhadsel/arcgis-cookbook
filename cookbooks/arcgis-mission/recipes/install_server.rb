@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-mission
 # Recipe:: install_server
 #
-# Copyright 2020-2021 Esri
+# Copyright 2020-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -71,4 +71,9 @@ arcgis_mission_server 'Configure agsmission service' do
   install_dir node['arcgis']['mission_server']['install_dir']
   only_if { node['arcgis']['mission_server']['configure_autostart'] }
   action :configure_autostart
+end
+
+arcgis_mission_server 'Start ArcGIS Mission Server' do
+  install_dir node['arcgis']['mission_server']['install_dir']
+  action :start
 end

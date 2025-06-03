@@ -3,7 +3,7 @@ layout: default
 title: "arcgis-egdb cookbook"
 category: cookbooks
 item: arcgis-egdb
-version: 2.1.0
+version: 2.2.0
 latest: true
 ---
 
@@ -17,6 +17,7 @@ The arcgis-egdb cookbook creates enterprise geodatabases in SQL Server or Postgr
 * Windows Server 2016
 * Windows Server 2019
 * Windows Server 2022
+* Windows Server 2025
 * Ubuntu Server 20.04 LTS
 * Ubuntu Server 22.04 LTS
 * Ubuntu Server 24.04 LTS

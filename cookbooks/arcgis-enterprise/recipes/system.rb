@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-enterprise
 # Recipe:: system
 #
-# Copyright 2023-2024 Esri
+# Copyright 2023-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ chef_gem 'multipart-post' do
 end
 
 if platform?('windows')
+  Utils.check_sensitive_value('arcgis.run_as_password', node['arcgis']['run_as_password'])
+
   user node['arcgis']['run_as_user'] do
     comment 'ArcGIS user account'
     manage_home true

@@ -67,6 +67,7 @@ arcgis_enterprise_server 'Configure HTTPS' do
   keystore_file node['arcgis']['server']['keystore_file']
   keystore_password node['arcgis']['server']['keystore_password']
   cert_alias node['arcgis']['server']['cert_alias']
+  import_certificate_chain node['arcgis']['server']['import_certificate_chain']
   use_join_site_tool node['arcgis']['server']['use_join_site_tool']
   retries 10
   retry_delay 30

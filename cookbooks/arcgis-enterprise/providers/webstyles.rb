@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-enterprise
 # Provider:: webstyles
 #
-# Copyright 2022 Esri
+# Copyright 2022-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -63,17 +63,6 @@ action :install do
       cmd = Mixlib::ShellOut.new("su #{run_as_user} -c \"#{cmd} #{args}\"", { :timeout => 7200 })
     else
       cmd = Mixlib::ShellOut.new("#{cmd} #{args}", {:user => run_as_user, :timeout => 7200})
-    end
-    cmd.run_command
-    cmd.error!
-
-    # Stop Portal to start it later using SystemD service
-    cmd = node['arcgis']['portal']['stop_tool']
-
-    if node['arcgis']['run_as_superuser']
-      cmd = Mixlib::ShellOut.new("su #{node['arcgis']['run_as_user']} -c \"#{cmd}\"", {:timeout => 30})
-    else
-      cmd = Mixlib::ShellOut.new(cmd, {:timeout => 30})
     end
     cmd.run_command
     cmd.error!

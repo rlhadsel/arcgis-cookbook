@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-enterprise
 # Attributes:: datastore
 #
-# Copyright 2023-2024 Esri
+# Copyright 2023-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ default['arcgis']['data_store'].tap do |data_store|
 
   data_store['hostidentifier'] = ''
 
-  data_store['types'] = 'tileCache,relational'
+  data_store['types'] = 'object,relational'
   data_store['mode'] = ''
   data_store['roles'] = ''
   data_store['configure_autostart'] = true
@@ -34,7 +34,7 @@ default['arcgis']['data_store'].tap do |data_store|
   data_store['force_remove_machine'] = false
   data_store['setup_archive'] = ''
   data_store['product_code'] = ''
-  data_store['ports'] = '2443,4369,9220,9320,9820,9829,9830,9831,9840,9876,9900,25672,44369,45671,45672,29079-29090'
+  data_store['ports'] = '2443,4369,9220,9320,9820,9828,9829,9830,9831,9840,9850,9876,9900,25672,44369,45671,45672,29079-29090'
 
   data_store['patches'] = []
   
@@ -51,6 +51,10 @@ default['arcgis']['data_store'].tap do |data_store|
     data_store['patch_registry'] ='SOFTWARE\\ESRI\\ArcGIS Data Store\\Updates'
 
     case node['arcgis']['version']
+    when '11.5'
+      data_store['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
+                                                'ArcGIS_DataStore_Windows_115_195370.exe').gsub('/', '\\')
+      data_store['product_code'] = '{622B3833-6239-4857-96D5-4294D1E85F94}'
     when '11.4'
       data_store['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
                                                 'ArcGIS_DataStore_Windows_114_192943.exe').gsub('/', '\\')
@@ -85,6 +89,9 @@ default['arcgis']['data_store'].tap do |data_store|
     data_store['lp-setup'] = node['arcgis']['data_store']['setup']
 
     case node['arcgis']['version']
+    when '11.5'
+      data_store['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
+                                                'ArcGIS_DataStore_Linux_115_195461.tar.gz')
     when '11.4'
       data_store['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
                                                 'ArcGIS_DataStore_Linux_114_192981.tar.gz')
@@ -164,4 +171,9 @@ default['arcgis']['data_store'].tap do |data_store|
   end
 
   data_store['setup_options'] = ''
+ 
+  data_store['relational']['disk_threshold_readonly'] = 5120
+  data_store['relational']['max_connections'] = 150
+  data_store['relational']['pitr'] = 'disable'
+  data_store['relational']['enablessl'] = true
 end

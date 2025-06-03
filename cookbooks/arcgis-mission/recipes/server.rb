@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-mission
 # Recipe:: server
 #
-# Copyright 2021 Esri
+# Copyright 2021-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,11 +18,6 @@
 #
 
 include_recipe 'arcgis-mission::install_server'
-
-arcgis_mission_server 'Start ArcGIS Mission Server' do
-  install_dir node['arcgis']['mission_server']['install_dir']
-  action :start
-end
 
 arcgis_mission_server 'Authorize ArcGIS Mission Server' do
   authorization_file node['arcgis']['mission_server']['authorization_file']

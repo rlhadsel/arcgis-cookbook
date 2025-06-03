@@ -1,5 +1,5 @@
 #
-# Copyright 2022-2024 Esri
+# Copyright 2022-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -262,7 +262,7 @@ module ArcGIS
     def create_site(admin_email,
                     admin_full_name,
                     admin_description,
-                    security_question,
+                    security_question_index,
                     security_question_answer,
                     content_store,
                     user_license_type_id,
@@ -277,7 +277,7 @@ module ArcGIS
         'email' => admin_email,
         'fullname' => admin_full_name,
         'description' => admin_description,
-        'securityQuestion' => security_question,
+        'securityQuestionIdx' => security_question_index,
         'securityQuestionAns' => security_question_answer,
         'contentStore' => content_store,
         'userLicenseTypeId' => user_license_type_id,
@@ -400,7 +400,7 @@ module ArcGIS
       false
     end
 
-    def import_server_ssl_certificate(cert_file, cert_password, cert_alias)
+    def import_server_ssl_certificate(cert_file, cert_password, cert_alias, import_certificate_chain = true)
       begin
         require 'net/http/post/multipart'
       rescue LoadError
@@ -415,6 +415,7 @@ module ArcGIS
         'file' => UploadIO.new(File.new(cert_file), 'application/x-pkcs12', cert_alias),
         'password' => cert_password,
         'alias' => cert_alias,
+        'importCertificateChain' => import_certificate_chain,
         'token' => token,
         'f' => 'json')
 
@@ -898,6 +899,80 @@ module ArcGIS
 
       response = send_request(request)
 
+      validate_response(response)
+    end
+
+    def update_email_settings(email_settings)
+      request = Net::HTTP::Post.new(URI.parse(@portal_url + '/portaladmin/system/emailSettings/update').request_uri)
+      
+      request.add_field('Referer', 'referer')
+      
+      token = generate_token(@generate_token_url)
+      
+      request.set_form_data(email_settings.merge({
+                              'token' => token,
+                              'f' => 'json'
+                            }))
+      
+      response = send_request(request)
+
+      validate_response(response)
+    end
+
+    # See https://developers.arcgis.com/rest/enterprise-administration/portal/security-configuration/
+    def security_configuration
+      request = Net::HTTP::Post.new(URI.parse(@portal_url + '/portaladmin/security/config').request_uri)
+
+      request.add_field('Referer', 'referer')
+
+      token = generate_token()
+
+      request.set_form_data('token' => token, 'f' => 'json')
+
+      response = send_request(request)
+
+      validate_response(response)
+
+      JSON.parse(response.body)
+    end
+
+    # See https://developers.arcgis.com/rest/enterprise-administration/portal/update-security-configuration/
+    def update_security_config(security_config)
+      request = Net::HTTP::Post.new(URI.parse(@portal_url + '/portaladmin/security/config/update').request_uri)
+      
+      request.add_field('Referer', 'referer')
+     
+      token = generate_token(@generate_token_url)
+      
+      request.set_form_data({ 'securityConfig' => security_config.to_json,
+                              'token' => token,
+                              'f' => 'json'
+                            })
+      
+      response = send_request(request)
+
+      validate_response(response)
+    end
+
+    # Set user default settings
+    # See https://developers.arcgis.com/rest/users-groups-and-items/set-user-default-settings/
+    def set_user_default_settings(settings)
+      uri = URI.parse(@portal_url + '/sharing/rest/portals/self/setUserDefaultSettings')
+
+      token = generate_token(@generate_token_url)
+
+      request = Net::HTTP::Post::Multipart.new(
+        uri.path,
+        'role' => settings['role'].nil? ? '' : settings['role'],
+        'userLicenseType' => settings['userLicenseType'].nil? ? '' : settings['userLicenseType'],
+        'groups' => settings['groups'].nil? ? [] : settings['groups'].to_json,
+        'apps' => settings['apps'].nil? ? [] : settings['apps'].to_json,
+        'appBundles' => settings['appBundles'].nil? ? [] : settings['appBundles'].to_json,
+        'token' => token,
+        'f' => 'json'
+      )
+
+      response = send_request(request)
       validate_response(response)
     end
 

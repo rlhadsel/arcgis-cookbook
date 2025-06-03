@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-video
 # Recipe:: install_server
 #
-# Copyright 2024 Esri
+# Copyright 2024-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -71,4 +71,9 @@ arcgis_video_server 'Configure agsvideo service' do
   install_dir node['arcgis']['video_server']['install_dir']
   only_if { node['arcgis']['video_server']['configure_autostart'] }
   action :configure_autostart
+end
+
+arcgis_video_server 'Start ArcGIS Video Server' do
+  install_dir node['arcgis']['video_server']['install_dir']
+  action :start
 end

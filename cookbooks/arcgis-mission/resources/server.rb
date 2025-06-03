@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-mission
 # Resource:: server
 #
-# Copyright 2022-2024 Esri
+# Copyright 2022-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -238,6 +238,12 @@ action :configure_autostart do
       agsmission_path = '/etc/systemd/system/agsmission.service'
       agsmission_service_file = 'agsmission.service.erb'
       agsmission_template_variables = ({ :agsmissionhome => agsmissionhome, :agsuser => agsuser })
+    end
+
+    execute 'Stop server with stopmissionserver.sh' do
+      cwd agsmissionhome
+      command ::File.join(agsmissionhome, 'stopmissionserver.sh')
+      user agsuser
     end
 
     template agsmission_path do

@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-video
 # Recipe:: install_server_wa
 #
-# Copyright 2024 Esri
+# Copyright 2024-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -57,6 +57,7 @@ end
 
 arcgis_enterprise_webadaptor 'Deploy Web Adaptor for Video Server' do
   install_dir node['arcgis']['web_adaptor']['install_dir']
+  war_file node['arcgis']['web_adaptor']['war_file']
   instance_name node['arcgis']['video_server']['wa_name']
   not_if { node['platform'] == 'windows' }
   action :deploy

@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-notebooks
 # Recipe:: server_node
 #
-# Copyright 2019 Esri
+# Copyright 2019-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,11 +18,6 @@
 #
 
 include_recipe 'arcgis-notebooks::install_server'
-
-arcgis_notebooks_server 'Start ArcGIS Notebook Server' do
-  install_dir node['arcgis']['notebook_server']['install_dir']
-  action :start
-end
 
 arcgis_notebooks_server 'Authorize ArcGIS Notebook Server' do
   authorization_file node['arcgis']['notebook_server']['authorization_file']

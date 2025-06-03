@@ -1,5 +1,5 @@
 #
-# Copyright 2023-2024 Esri
+# Copyright 2023-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -333,7 +333,7 @@ module ArcGIS
 
       request.set_form_data('username' => @admin_username,
                             'password' => @admin_password,
-                            'CloudConfigJson' => cloud_config,
+                            'cloudConfigJson' => cloud_config,
                             'settings' => log_settings.to_json,
                             'f' => 'json')
 
@@ -396,7 +396,7 @@ module ArcGIS
       false
     end
 
-    def import_server_ssl_certificate(machine_name, cert_file, cert_password, cert_alias)
+    def import_server_ssl_certificate(machine_name, cert_file, cert_password, cert_alias, import_certificate_chain = true)
       begin
         require 'net/http/post/multipart'
       rescue LoadError
@@ -412,6 +412,7 @@ module ArcGIS
         'certFile' => UploadIO.new(File.new(cert_file), 'application/x-pkcs12', cert_alias),
         'certPassword' => cert_password,
         'alias' => cert_alias,
+        'importCertificateChain' => import_certificate_chain,
         'token' => token,
         'f' => 'json'
 

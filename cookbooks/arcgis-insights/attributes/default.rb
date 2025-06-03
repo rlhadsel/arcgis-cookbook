@@ -2,7 +2,7 @@
 # Cookbook Name:: arcgis-insights
 # Attributes:: default
 #
-# Copyright 2023-2024 Esri
+# Copyright 2023-2025 Esri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ include_attribute 'arcgis-repository'
 include_attribute 'arcgis-enterprise'
 
 default['arcgis']['insights'].tap do |insights|
-  insights['version'] = '2024.1'
+  insights['version'] = '2024.2'
 
   insights['patches'] = []
 
@@ -30,6 +30,10 @@ default['arcgis']['insights'].tap do |insights|
                         node['arcgis']['insights']['version'] + '\\Insights\\Setup.exe'
 
     case node['arcgis']['insights']['version']
+    when '2024.2'
+      insights['product_code'] = '{FE0F6D4B-5BF3-4CFA-9E2F-E31B2438B5B2}'
+      insights['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
+                                              'ArcGIS_Insights_Windows_2024_2_193021.exe')
     when '2024.1'
       insights['product_code'] = '{751A0EAD-5735-4CC4-AC7D-97AA7EA113F2}'
       insights['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
@@ -109,6 +113,9 @@ default['arcgis']['insights'].tap do |insights|
                                     'Insights/Insights-Setup.sh')
 
     case node['arcgis']['insights']['version']
+    when '2024.2'
+      insights['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
+                                              'ArcGIS_Insights_Linux_2024_2_193022.tar.gz')
     when '2024.1'
       insights['setup_archive'] = ::File.join(node['arcgis']['repository']['archives'],
                                               'ArcGIS_Insights_Linux_2024_1_190728.tar.gz')
